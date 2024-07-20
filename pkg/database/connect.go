@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-logr/logr"
 
+	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -30,15 +31,6 @@ func ConnectDB() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	return db
-}
-
-func TESTConnectDB() *gorm.DB {
-	dsn := "host=localhost port=5432 dbname=product-management-system-db user=user password=pass sslmode=disable TimeZone=Asia/Shanghai"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
 	return db
 }
 
@@ -80,4 +72,10 @@ func validateDatabaseConfig(cfg *config.DatabaseConfig) {
 		cfg.Port = 3306
 	}
 
+}
+
+// GenerateUUID ...
+func GenerateUUID() string {
+	id, _ := uuid.NewRandom()
+	return id.String()
 }

@@ -8,6 +8,7 @@ import (
 	"product-management-system/config"
 	"product-management-system/pkg/database"
 	"product-management-system/pkg/log"
+	"product-management-system/pkg/router"
 	"product-management-system/pkg/service"
 )
 
@@ -49,4 +50,6 @@ func main() {
 
 	productService := service.NewProductService(logger, db)
 	// productService.CreateProduct()
+	router := router.InitRouter(logger, productService)
+	router.Run(appAddr)
 }

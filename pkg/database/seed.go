@@ -4,11 +4,9 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"product-management-system/pkg/model"
 
 	"gorm.io/gorm"
-
-	"product-management-system/pkg/core"
-	"product-management-system/pkg/model"
 )
 
 func Seeder(db *gorm.DB) {
@@ -31,7 +29,7 @@ func Seeder(db *gorm.DB) {
 			price = rand.Float64()*1000 + 3000 // 3000 to 4000
 		}
 		productList[i] = model.Product{
-			UUID:         core.GenerateUUID(),
+			UUID:         GenerateUUID(),
 			ProductName:  fmt.Sprintf("Laptop %d", i+1),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,
@@ -57,7 +55,7 @@ func Seeder(db *gorm.DB) {
 			price = rand.Float64()*1000 + 3000 // 3000 to 4000
 		}
 		productList[i] = model.Product{
-			UUID:         core.GenerateUUID(),
+			UUID:         GenerateUUID(),
 			ProductName:  fmt.Sprintf("Mobile Phone %d", i-9),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,
@@ -83,7 +81,7 @@ func Seeder(db *gorm.DB) {
 			price = rand.Float64()*1000 + 3000 // 3000 to 4000
 		}
 		productList[i] = model.Product{
-			UUID:         core.GenerateUUID(),
+			UUID:         GenerateUUID(),
 			ProductName:  fmt.Sprintf("Watch %d", i-19),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,
@@ -109,7 +107,7 @@ func Seeder(db *gorm.DB) {
 			price = rand.Float64()*1000 + 3000 // 3000 to 4000
 		}
 		productList[i] = model.Product{
-			UUID:         core.GenerateUUID(),
+			UUID:         GenerateUUID(),
 			ProductName:  fmt.Sprintf("Headphone %d", i-29),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,
@@ -135,7 +133,7 @@ func Seeder(db *gorm.DB) {
 			price = rand.Float64()*1000 + 3000 // 3000 to 4000
 		}
 		productList[i] = model.Product{
-			UUID:         core.GenerateUUID(),
+			UUID:         GenerateUUID(),
 			ProductName:  fmt.Sprintf("Camera %d", i-39),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,

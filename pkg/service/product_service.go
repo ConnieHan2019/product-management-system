@@ -7,9 +7,9 @@ import (
 	"github.com/go-logr/logr"
 	"gorm.io/gorm"
 
-	"product-management-system/pkg/core"
-	"product-management-system/pkg/dtos"
+	"product-management-system/pkg/database"
 	"product-management-system/pkg/model"
+	"product-management-system/pkg/request"
 )
 
 type ProductService struct {
@@ -28,7 +28,7 @@ func NewProductService(log logr.Logger, db *gorm.DB) *ProductService {
 // search product by name before creating
 // if product already exists, return error
 // if product does not exist, create it
-func (ps *ProductService) CreateProduct(productEntity *dtos.Product) (*model.Product, error) {
+func (ps *ProductService) CreateProduct(productEntity *request.Product) (*model.Product, error) {
 	// check if product already exists
 	if _, err := ps.GetProductByName(productEntity.ProductName); err == nil {
 		ps.Logger.Info("Product already exists", "product name", productEntity.ProductName)
@@ -48,7 +48,7 @@ func (ps *ProductService) CreateProduct(productEntity *dtos.Product) (*model.Pro
 }
 
 // GetProductByUUID retrieves a product by its UUID
-func (ps *ProductService) GetProductByUUID(uuid string) (*dtos.Product, error) {
+func (ps *ProductService) GetProductByUUID(uuid string) (*request.Product, error) {
 	product := &model.Product{}
 	res := ps.DB.Where("uuid = ?", uuid).First(product)
 	if res.Error != nil {
@@ -59,10 +59,10 @@ func (ps *ProductService) GetProductByUUID(uuid string) (*dtos.Product, error) {
 }
 
 // GetProductByName retrieves a product by its name
-func (ps *ProductService) GetProductByName(name string) (*dtos.Product, error) {
+func (ps *ProductService) GetProductByName(name string) (*request.Product, error) {
 	product := &model.Product{}
 	//fuzzy search by name
-	res := ps.DB.Where("product_name = ?", name).First(product)
+	res := ps.DB.Where("product_name LIKE ?", "%"+name+"%").First(product)
 	if res.Error != nil {
 		ps.Logger.Error(res.Error, "Error retrieving product", "name", name)
 		return nil, fmt.Errorf("error retrieving product: %w, name:%s", res.Error, name)
@@ -71,7 +71,7 @@ func (ps *ProductService) GetProductByName(name string) (*dtos.Product, error) {
 }
 
 // ListProducts retrieves a list of products by ProductListOptions
-func (ps *ProductService) ListProducts(options *dtos.ListProductOptions) ([]*dtos.Product, error) {
+func (ps *ProductService) ListProducts(options *request.ListProductOptions) ([]*request.Product, error) {
 	products := []*model.Product{}
 	query := ps.DB
 	if options.ProductName != "" {
@@ -98,23 +98,24 @@ func (ps *ProductService) ListProducts(options *dtos.ListProductOptions) ([]*dto
 	if options.Page > 0 && options.PageSize > 0 {
 		query = query.Offset((options.Page - 1) * options.PageSize).Limit(options.PageSize)
 	}
+
 	res := query.Find(&products)
 	if res.Error != nil {
 		ps.Logger.Error(res.Error, "Error listing products", "options", options)
 		return nil, fmt.Errorf("error listing products: %w, options:%v", res.Error, options)
 	}
-	productDTOs := []*dtos.Product{}
+	productresp := []*request.Product{}
 	for _, product := range products {
-		productDTOs = append(productDTOs, ps.convertProductToDTO(product))
+		productresp = append(productresp, ps.convertProductToDTO(product))
 	}
-	return productDTOs, nil
+	return productresp, nil
 }
 
 // // UpdateProduct updates a product
 // search product by UUID before updating
 // if product does not exist, return error
 // if product exists, update it
-func (ps *ProductService) UpdateProduct(productEntity *dtos.Product) (*model.Product, error) {
+func (ps *ProductService) UpdateProduct(productEntity *request.Product) (*model.Product, error) {
 	product := ps.convertProductToModel(productEntity)
 	// check if product exists
 	if _, err := ps.GetProductByUUID(product.UUID); err != nil {
@@ -166,11 +167,11 @@ func (ps *ProductService) DeleteProductByName(name string) error {
 }
 
 // convertProductToDTO converts a product model to a product DTO
-func (ps *ProductService) convertProductToDTO(product *model.Product) *dtos.Product {
+func (ps *ProductService) convertProductToDTO(product *model.Product) *request.Product {
 	if product == nil {
 		return nil
 	}
-	return &dtos.Product{
+	return &request.Product{
 		UUID:         product.UUID,
 		ProductName:  product.ProductName,
 		Price:        product.Price,
@@ -187,12 +188,12 @@ func (ps *ProductService) convertProductToDTO(product *model.Product) *dtos.Prod
 	}
 }
 
-func (ps *ProductService) convertProductToModel(product *dtos.Product) *model.Product {
+func (ps *ProductService) convertProductToModel(product *request.Product) *model.Product {
 	if product == nil {
 		return nil
 	}
 	if product.UUID == "" {
-		product.UUID = core.GenerateUUID()
+		product.UUID = database.GenerateUUID()
 	}
 	return &model.Product{
 		UUID:         product.UUID,
