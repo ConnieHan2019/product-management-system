@@ -1,0 +1,27 @@
+version: "3.5"
+services: 
+  product-management-system-db-service:
+    container_name: product-management-system-db-only
+    image: postgres:alpine
+    env_file: ./docker/local.env
+    ports:
+      - "5432:5432"
+    tty: true
+    restart: always
+    healthcheck:
+      #IMPORTANT! change this if you have changed a local.env
+      test: ["CMD-SHELL", "pg_isready -U product-management-system-usr -d product-management-system-db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  product-management-system-adminer-service:
+    container_name: product-management-system-adminer-only
+    image: adminer
+    restart: always
+    ports:
+      - 8086:8080
+    env_file: ./docker/local.env
+    links:
+      - product-management-system-db-service
+    depends_on:
+      - product-management-system-db-service

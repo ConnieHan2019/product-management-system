@@ -21,7 +21,7 @@ type Product struct {
 type ListProductOptions struct {
 	ListFilter
 	ProductName string  `json:"productName"`
-	Catagory    string  `json:"category"`
+	Category    string  `json:"category"`
 	MinPrice    float64 `json:"minPrice"`
 	MaxPrice    float64 `json:"maxPrice"`
 	// OnlyAvailable is a flag to filter only  products with stock > 0

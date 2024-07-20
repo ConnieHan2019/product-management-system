@@ -26,3 +26,14 @@ func ConnectDB() *gorm.DB {
 
 	return db
 }
+
+func TESTConnectDB() *gorm.DB {
+	dsn := fmt.Sprintf(
+		"host=localhost port=5432 dbname=product-manager-system-db user=product-manager-system-usr password=product-manager-system-psw sslmode=disable TimeZone=Asia/Shanghai",
+	)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+	return db
+}

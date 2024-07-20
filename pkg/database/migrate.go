@@ -8,7 +8,7 @@ import (
 
 func Migrate() {
 	log.Printf("Migrate: Start")
-	db := ConnectDB()
+	db := TESTConnectDB()
 	db.AutoMigrate(
 		&model.Product{},
 	)

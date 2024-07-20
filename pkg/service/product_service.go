@@ -37,8 +37,8 @@ func (ps *ProductService) CreateProduct(productEntity *dtos.Product) (*model.Pro
 	product := ps.convertProductToModel(productEntity)
 	res := ps.DB.Create(&product)
 	if res.Error != nil {
-		ps.Logger.Error(res.Error, "Error creating product", "roduct name", product.Name)
-		return nil, fmt.Errorf("Error creating product: %v", res.Error, "product name", product.Name)
+		ps.Logger.Error(res.Error, "Error creating product", "roduct name", product.ProductName)
+		return nil, fmt.Errorf("Error creating product: %v", res.Error, "product name", product.ProductName)
 
 	}
 	return product, nil
