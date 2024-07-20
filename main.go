@@ -1,13 +1,47 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 
+	"go.uber.org/zap"
+
+	"product-management-system/config"
 	"product-management-system/pkg/database"
+	"product-management-system/pkg/log"
 )
 
+var (
+	v, h, debug                  bool
+	configPath, logPath, appAddr string
+)
+
+func parseFlag() {
+	flag.BoolVar(&v, "version", false, "show version")
+	flag.BoolVar(&h, "h", false, "show usage")
+	flag.StringVar(&appAddr, "app-addr", ":8080", "The address the app endpoint binds to.")
+	flag.StringVar(&logPath, "log-path", "", "The log file path.")
+	flag.StringVar(&configPath, "config-path", "config.yaml", "The config dir of the web-neudim project.")
+	flag.Parse()
+
+}
+
 func main() {
-	fmt.Println("Start Product Management System")
-	database.Migrate()
-	database.Seeder()
+	parseFlag()
+	logLevel := zap.InfoLevel
+	if debug {
+		logLevel = zap.DebugLevel
+	}
+	logger := log.NewLogger(log.LogOption{
+		LogPath: logPath,
+		Level:   logLevel,
+	})
+
+	err := config.LoadConfig(configPath, logger)
+	if err != nil {
+		logger.Error(err, "fail to load config", "configPath", configPath)
+		panic(err)
+	}
+
+	db := database.InitDatabase(logger, config.Cfg)
+	database.Seeder(db)
 }

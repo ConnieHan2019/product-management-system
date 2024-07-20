@@ -5,13 +5,14 @@ import (
 	"log"
 	"math/rand"
 
+	"gorm.io/gorm"
+
 	"product-management-system/pkg/core"
 	"product-management-system/pkg/model"
 )
 
-func Seeder() {
+func Seeder(db *gorm.DB) {
 	log.Printf("Seeder: Start")
-	db := ConnectDB()
 
 	category := [5]string{"laptop", "mobile phone", "watch", "headphone", "camera"}
 	providerName := [4]string{"apple", "samsung", "xiaomi", "huawei"}
