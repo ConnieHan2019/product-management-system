@@ -1,7 +1,5 @@
 version: '3'
-
 services:
-
   mysql-server:
     image: mysql:8.0
     environment:

@@ -1,19 +1,15 @@
 package model
 
-import (
-	"time"
-)
-
+// Product defines the model for product
 type Product struct {
-	UUID        string    `json:"uuid" gorm:"column:uuid;primaryKey"`
-	CreatedAt   time.Time `json:"createdAt,omitempty"`
-	UpdatedAt   time.Time `json:"updatedAt,omitempty"`
-	DeletedAt   time.Time `json:"deletedAt,omitempty"`
-	ProductName string    `json:"productName" gorm:"column:product_name;index;not null"`
-	Description string    `json:"description" gorm:"column:description"`
-	Category    string    `json:"category" gorm:"column:category;index;not null"`
-	Price       float64   `json:"price" gorm:"column:price"`
-	Stock       int       `json:"stock" gorm:"column:stock"`
+	UUID        string  `json:"uuid" gorm:"column:uuid;primaryKey"`
+	CreatedAt   string  `json:"createdAt,omitempty" gorm:"column:created_at"`
+	UpdatedAt   string  `json:"updatedAt,omitempty" gorm:"column:updated_at"`
+	ProductName string  `json:"productName" gorm:"column:product_name;index;not null"`
+	Description string  `json:"description" gorm:"column:description"`
+	Category    string  `json:"category" gorm:"column:category;index;not null"`
+	Price       float64 `json:"price" gorm:"column:price"`
+	Stock       int     `json:"stock" gorm:"column:stock"`
 
 	ProductCode  string `json:"productCode" gorm:"column:product_code"`
 	ProductImage string `json:"productImage" gorm:"column:product_image"`

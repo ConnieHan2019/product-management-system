@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/go-logr/logr"
 	"gorm.io/gorm"
@@ -31,14 +32,16 @@ func (ps *ProductService) CreateProduct(productEntity *dtos.Product) (*model.Pro
 	// check if product already exists
 	if _, err := ps.GetProductByName(productEntity.ProductName); err == nil {
 		ps.Logger.Info("Product already exists", "product name", productEntity.ProductName)
-		return nil, fmt.Errorf("Product already exists: %v", "product name", productEntity.ProductName)
+		return nil, fmt.Errorf("product already exists:  product name :%s", productEntity.ProductName)
 	}
 
 	product := ps.convertProductToModel(productEntity)
+	product.CreatedAt = time.Now().Format("2006-01-02 15:04:05")
+	product.UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
 	res := ps.DB.Create(&product)
 	if res.Error != nil {
 		ps.Logger.Error(res.Error, "Error creating product", "roduct name", product.ProductName)
-		return nil, fmt.Errorf("Error creating product: %v", res.Error, "product name", product.ProductName)
+		return nil, fmt.Errorf("error creating product: %w, product name:%s", res.Error, product.ProductName)
 
 	}
 	return product, nil
@@ -50,7 +53,7 @@ func (ps *ProductService) GetProductByUUID(uuid string) (*dtos.Product, error) {
 	res := ps.DB.Where("uuid = ?", uuid).First(product)
 	if res.Error != nil {
 		ps.Logger.Error(res.Error, "Error retrieving product", "uuid", uuid)
-		return nil, fmt.Errorf("Error retrieving product: %v", res.Error, "uuid", uuid)
+		return nil, fmt.Errorf("error retrieving product %w, uuid:%s", res.Error, uuid)
 	}
 	return ps.convertProductToDTO(product), nil
 }
@@ -59,10 +62,10 @@ func (ps *ProductService) GetProductByUUID(uuid string) (*dtos.Product, error) {
 func (ps *ProductService) GetProductByName(name string) (*dtos.Product, error) {
 	product := &model.Product{}
 	//fuzzy search by name
-	res := ps.DB.Where("name LIKE ?", "%"+name+"%").First(product)
+	res := ps.DB.Where("product_name = ?", name).First(product)
 	if res.Error != nil {
 		ps.Logger.Error(res.Error, "Error retrieving product", "name", name)
-		return nil, fmt.Errorf("Error retrieving product: %v", res.Error, "name", name)
+		return nil, fmt.Errorf("error retrieving product: %w, name:%s", res.Error, name)
 	}
 	return ps.convertProductToDTO(product), nil
 }
@@ -73,7 +76,7 @@ func (ps *ProductService) ListProducts(options *dtos.ListProductOptions) ([]*dto
 	query := ps.DB
 	if options.ProductName != "" {
 		// fuzzy search by name
-		query = query.Where("name LIKE ?", "%"+options.ProductName+"%")
+		query = query.Where("product_name LIKE ?", "%"+options.ProductName+"%")
 	}
 	if options.Category != "" {
 		query = query.Where("category = ?", options.Category)
@@ -90,10 +93,15 @@ func (ps *ProductService) ListProducts(options *dtos.ListProductOptions) ([]*dto
 	if options.ProviderName != "" {
 		query = query.Where("provider_name = ?", options.ProviderName)
 	}
+
+	// pagination
+	if options.Page > 0 && options.PageSize > 0 {
+		query = query.Offset((options.Page - 1) * options.PageSize).Limit(options.PageSize)
+	}
 	res := query.Find(&products)
 	if res.Error != nil {
 		ps.Logger.Error(res.Error, "Error listing products", "options", options)
-		return nil, fmt.Errorf("Error listing products: %v", res.Error, "options", options)
+		return nil, fmt.Errorf("error listing products: %w, options:%v", res.Error, options)
 	}
 	productDTOs := []*dtos.Product{}
 	for _, product := range products {
@@ -111,45 +119,48 @@ func (ps *ProductService) UpdateProduct(productEntity *dtos.Product) (*model.Pro
 	// check if product exists
 	if _, err := ps.GetProductByUUID(product.UUID); err != nil {
 		ps.Logger.Info("Product does not exist", "product UUID", product.UUID)
-		return nil, fmt.Errorf("Product does not exist: %v", "product UUID", product.UUID)
+		return nil, fmt.Errorf("product does not exist: %w, product UUID:%s", err, product.UUID)
 	}
 
+	product.UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
 	res := ps.DB.Save(&product)
 	if res.Error != nil {
-		ps.Logger.Error(res.Error, "Error updating product", "product name", product.Name)
-		return nil, fmt.Errorf("Error updating product: %v", res.Error, "product name", product.Name)
+		ps.Logger.Error(res.Error, "Error updating product", "product name", product.ProductName)
+		return nil, fmt.Errorf("error updating product: %w, product name:%s", res.Error, product.ProductName)
 	}
 	return product, nil
 }
 
 // DeleteProductByUUID deletes a product by its UUID
+// Truely delete the product from database
 func (ps *ProductService) DeleteProductByUUID(uuid string) error {
 	product := &model.Product{}
 	// check if product exists
 	if _, err := ps.GetProductByUUID(uuid); err != nil {
 		ps.Logger.Info("Product does not exist", "product UUID", uuid)
-		return fmt.Errorf("Product does not exist: %v", "product UUID", uuid)
+		return fmt.Errorf("product does not exist: %w, product UUID:%s", err, uuid)
 	}
 	res := ps.DB.Where("uuid = ?", uuid).Delete(product)
 	if res.Error != nil {
 		ps.Logger.Error(res.Error, "Error deleting product", "product UUID", uuid)
-		return fmt.Errorf("Error deleting product: %v", res.Error, "product UUID", uuid)
+		return fmt.Errorf("error deleting product: %w, product UUID:%s", res.Error, uuid)
 	}
 	return nil
 }
 
 // DeleteProductByName deletes a product by its name
+// Truely delete the product from database
 func (ps *ProductService) DeleteProductByName(name string) error {
 	product := &model.Product{}
 	// check if product exists
 	if _, err := ps.GetProductByName(name); err != nil {
 		ps.Logger.Info("Product does not exist", "product name", name)
-		return fmt.Errorf("Product does not exist: %v", "product name", name)
+		return fmt.Errorf("product does not exist: %w, product name:%s", err, name)
 	}
-	res := ps.DB.Where("name = ?", name).Delete(product)
+	res := ps.DB.Where("product_name = ?", name).Delete(product)
 	if res.Error != nil {
 		ps.Logger.Error(res.Error, "Error deleting product", "product name", name)
-		return fmt.Errorf("Error deleting product: %v", res.Error, "product name", name)
+		return fmt.Errorf("error deleting product: %w, product name:%s", res.Error, name)
 	}
 	return nil
 }
@@ -161,7 +172,7 @@ func (ps *ProductService) convertProductToDTO(product *model.Product) *dtos.Prod
 	}
 	return &dtos.Product{
 		UUID:         product.UUID,
-		ProductName:  product.Name,
+		ProductName:  product.ProductName,
 		Price:        product.Price,
 		Description:  product.Description,
 		Category:     product.Category,

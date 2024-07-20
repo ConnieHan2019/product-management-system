@@ -3,12 +3,14 @@ package database
 import (
 	"log"
 
+	"gorm.io/gorm"
+
 	"product-management-system/pkg/model"
 )
 
-func Migrate() {
+func Migrate(db *gorm.DB) {
 	log.Printf("Migrate: Start")
-	db := TESTConnectDB()
+
 	db.AutoMigrate(
 		&model.Product{},
 	)

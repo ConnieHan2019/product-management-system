@@ -8,6 +8,7 @@ import (
 	"product-management-system/config"
 	"product-management-system/pkg/database"
 	"product-management-system/pkg/log"
+	"product-management-system/pkg/service"
 )
 
 var (
@@ -43,5 +44,9 @@ func main() {
 	}
 
 	db := database.InitDatabase(logger, config.Cfg)
+	database.Migrate(db)
 	database.Seeder(db)
+
+	productService := service.NewProductService(logger, db)
+	// productService.CreateProduct()
 }
