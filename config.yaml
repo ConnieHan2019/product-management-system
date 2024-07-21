@@ -1,6 +1,6 @@
 username: root
-password: hello@123
-dbname: neudim
+password: pass
+dbname: product-management-system-db
 charset: latin1
 host: 127.0.0.1
 port: 3306

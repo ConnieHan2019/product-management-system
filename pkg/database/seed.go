@@ -30,7 +30,7 @@ func Seeder(db *gorm.DB) {
 		}
 		productList[i] = model.Product{
 			UUID:         GenerateUUID(),
-			ProductName:  fmt.Sprintf("Laptop %d", i+1),
+			ProductName:  fmt.Sprintf("Laptop_%d", i+1),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,
 			Category:     category[0],
@@ -56,7 +56,7 @@ func Seeder(db *gorm.DB) {
 		}
 		productList[i] = model.Product{
 			UUID:         GenerateUUID(),
-			ProductName:  fmt.Sprintf("Mobile Phone %d", i-9),
+			ProductName:  fmt.Sprintf("Mobile_Phone %d", i-9),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,
 			Category:     category[1],
@@ -82,7 +82,7 @@ func Seeder(db *gorm.DB) {
 		}
 		productList[i] = model.Product{
 			UUID:         GenerateUUID(),
-			ProductName:  fmt.Sprintf("Watch %d", i-19),
+			ProductName:  fmt.Sprintf("Watch_%d", i-19),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,
 			Category:     category[2],
@@ -108,7 +108,7 @@ func Seeder(db *gorm.DB) {
 		}
 		productList[i] = model.Product{
 			UUID:         GenerateUUID(),
-			ProductName:  fmt.Sprintf("Headphone %d", i-29),
+			ProductName:  fmt.Sprintf("Headphone_%d", i-29),
 			Price:        price,
 			Stock:        rand.Intn(10) + 1,
 			Category:     category[3],

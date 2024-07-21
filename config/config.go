@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/go-logr/logr"
 	"gopkg.in/yaml.v2"
@@ -39,4 +40,12 @@ func LoadConfig(configFile string, log logr.Logger) error {
 	}
 	log.Info("Configs loaded")
 	return nil
+}
+
+func LoadEnvConfig() {
+	Cfg.Username = os.Getenv("DB_ROOT_USER")
+	Cfg.Password = os.Getenv("DB_ROOT_PASSWPORD")
+	Cfg.Dbname = os.Getenv("DB_NAME")
+	Cfg.Charset = os.Getenv("DB_CHARSET")
+	Cfg.Host = os.Getenv("DB_HOST")
 }

@@ -1,19 +1,28 @@
 version: '3'
-services:
+services:  
   mysql-server:
     image: mysql:8.0
-    environment:
-      - MYSQL_ROOT_PASSWORD=hello@123
-      - MYSQL_DATABASE=neudim
-      - MYSQL_CHARSET=latin1
+    container_name: mysql-server
+    network_mode: "host"
     ports:
       - "3306:3306"
+    env_file:
+      - env/docker.env
     volumes:
       - mysql-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
-
+  product-management-system:
+    image: product-management-system
+    container_name: product-management-system
+    network_mode: "host"  
+    command: ["--config-path", "/app/config.yaml"]
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    env_file:
+      - env/docker.env
+    depends_on:
+      - mysql-server
 volumes:
   mysql-data:

@@ -3,36 +3,15 @@ package database
 import (
 	"fmt"
 	"net/url"
-	"os"
 
 	"github.com/go-logr/logr"
 
 	"github.com/google/uuid"
 	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
 	"product-management-system/config"
 )
-
-func ConnectDB() *gorm.DB {
-	dsn := fmt.Sprintf(
-		"host=%s port=%s dbname=%s user=%s password=%s sslmode=disable TimeZone=%s",
-		os.Getenv("DB_HOST"),
-		os.Getenv("DB_PORT"),
-		os.Getenv("DB_NAME"),
-		os.Getenv("DB_USER"),
-		os.Getenv("DB_PASSWORD"),
-		os.Getenv("DB_TIMEZONE"),
-	)
-
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("failed to connect database")
-	}
-
-	return db
-}
 
 // InitDatabase ...
 func InitDatabase(log logr.Logger, dbConfig config.DatabaseConfig) *gorm.DB {
@@ -57,10 +36,10 @@ func InitDatabase(log logr.Logger, dbConfig config.DatabaseConfig) *gorm.DB {
 
 func validateDatabaseConfig(cfg *config.DatabaseConfig) {
 	if cfg.Username == "" {
-		cfg.Username = "user"
+		cfg.Username = "root"
 	}
 	if cfg.Password == "" {
-		cfg.Password = "Hello@1234"
+		cfg.Password = "pass"
 	}
 	if cfg.Dbname == "" {
 		cfg.Dbname = "product-management-system-db"

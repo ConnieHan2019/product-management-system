@@ -149,23 +149,6 @@ func (ps *ProductService) DeleteProductByUUID(uuid string) error {
 	return nil
 }
 
-// DeleteProductByName deletes a product by its name
-// Truely delete the product from database
-func (ps *ProductService) DeleteProductByName(name string) error {
-	product := &model.Product{}
-	// check if product exists
-	if _, err := ps.GetProductByName(name); err != nil {
-		ps.Logger.Info("Product does not exist", "product name", name)
-		return fmt.Errorf("product does not exist: %w, product name:%s", err, name)
-	}
-	res := ps.DB.Where("product_name = ?", name).Delete(product)
-	if res.Error != nil {
-		ps.Logger.Error(res.Error, "Error deleting product", "product name", name)
-		return fmt.Errorf("error deleting product: %w, product name:%s", res.Error, name)
-	}
-	return nil
-}
-
 // convertProductToDTO converts a product model to a product DTO
 func (ps *ProductService) convertProductToDTO(product *model.Product) *request.Product {
 	if product == nil {
