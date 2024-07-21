@@ -2,6 +2,7 @@ package request
 
 import (
 	"fmt"
+	"strings"
 )
 
 // Product(dto) is a struct that represents the product entity.
@@ -26,6 +27,7 @@ func (p *Product) Validate() error {
 	if p.ProductName == "" {
 		return fmt.Errorf("productName is required")
 	}
+	p.ProductName = strings.TrimSpace(p.ProductName)
 	if p.Price == 0 {
 		return fmt.Errorf("price is required")
 	}
@@ -35,7 +37,10 @@ func (p *Product) Validate() error {
 	if p.Category == "" {
 		return fmt.Errorf("category is required")
 	}
-
+	p.Category = strings.TrimSpace(p.Category)
+	if p.ProductCode == "" {
+		return fmt.Errorf("productCode is required")
+	}
 	if p.Stock == 0 {
 		return fmt.Errorf("stock is required")
 	}

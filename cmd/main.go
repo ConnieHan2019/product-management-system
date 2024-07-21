@@ -5,7 +5,7 @@ import (
 
 	"go.uber.org/zap"
 
-	"product-management-system/config"
+	"product-management-system/pkg/config"
 	"product-management-system/pkg/database"
 	"product-management-system/pkg/log"
 	"product-management-system/pkg/router"

@@ -1,5 +1,7 @@
 package model
 
+
+// Catagory defines the model for catagory
 type Catagory struct {
 	UUID         string `json:"uuid" gorm:"column:uuid;primaryKey"`
 	CreatedAt    string `json:"createdAt,omitempty" gorm:"column:created_at"`

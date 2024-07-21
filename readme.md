@@ -1,4 +1,23 @@
-# product-management-system
+# Product-management-system
+## Get Started
+
+Just one command
+
+```bash
+docker-compose up --build
+```
+
+> Mysql address: localhost:3306 </br >
+> Product-management-system address: lcoalhost:8080</br>
+## Unity Test and Test Integration
+
+The location of the unit test file is pkg/service/product_service.go. </br>
+If you use goland, you can run them directly. </br>
+
+
+```bash
+go test -v ./src/tests/
+```
 
 
 # Project Structure
