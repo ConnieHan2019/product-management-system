@@ -1,0 +1,13 @@
+version: '3'
+services:  
+ product-management-system:
+    image: product-management-system
+    container_name: product-management-system-1
+    command: ["--config-path", "/app/config.yaml"]
+    ports:
+      - "8080:8080"
+    env_file:
+      - env/docker.env
+    volumes:
+      - ./config.yaml:/app/config.yaml
+  

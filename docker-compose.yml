@@ -4,11 +4,9 @@ services:
     image: mysql:8.0
     container_name: mysql-server
     ports:
-      - "3306:3306"
+      - "3307:3306"
     env_file:
       - env/docker.env
-    volumes:
-      - mysql-data:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--password=$${DB_ROOT_PASSWORD}"]
       interval: 30s
@@ -17,15 +15,12 @@ services:
   product-management-system:
     image: product-management-system
     container_name: product-management-system
-    build:
-      context: .
-      dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    command: ["--config-path", "/app/config.yaml"]
     env_file:
       - env/docker.env
-    command: ["sleep 360"]
     depends_on:
       - mysql-server
-volumes:
-  mysql-data:
+    volumes:
+      - ./config.yaml:/app/config.yaml

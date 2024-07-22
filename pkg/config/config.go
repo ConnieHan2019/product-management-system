@@ -42,10 +42,12 @@ func LoadConfig(configFile string, log logr.Logger) error {
 	return nil
 }
 
-func LoadEnvConfig() {
+func LoadEnvConfig(logger logr.Logger) {
 	Cfg.Username = os.Getenv("DB_ROOT_USER")
 	Cfg.Password = os.Getenv("DB_ROOT_PASSWORD")
 	Cfg.Dbname = os.Getenv("DB_NAME")
 	Cfg.Charset = os.Getenv("DB_CHARSET")
 	Cfg.Host = os.Getenv("DB_HOST")
+	logger.Info("Configs loaded from env", "username", Cfg.Username, "password", Cfg.Password, "dbname", Cfg.Dbname, "charset", Cfg.Charset, "host", Cfg.Host)
+
 }

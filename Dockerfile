@@ -1,4 +1,4 @@
-FROM golang:1.22 AS builder
+FROM golang:1.22
 
 LABEL maintainer="ConnieHan2019<18302010059@fudan.edu.cn>"
 
@@ -22,6 +22,3 @@ RUN go build -o product-management-system ./cmd/main.go
 
 
 ENTRYPOINT ["./product-management-system"]
-
-
-WORKDIR /app

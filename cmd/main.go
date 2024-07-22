@@ -41,7 +41,7 @@ func main() {
 	// 判断configPath是否为空
 	if configPath == "" {
 		logger.Info("config path is empty, load env config")
-		config.LoadEnvConfig()
+		config.LoadEnvConfig(logger)
 	} else {
 		logger.Info("config path is not empty, load config from file", "configPath", configPath)
 		err := config.LoadConfig(configPath, logger)
@@ -50,7 +50,7 @@ func main() {
 			panic(err)
 		}
 	}
-
+	logger.Info("config", "host", config.Cfg.Host, "port", config.Cfg.Port, "username", config.Cfg.Username, "dbname", config.Cfg.Dbname)
 	db := database.InitDatabase(logger, config.Cfg)
 	database.Migrate(db)
 	database.Seeder(db)
