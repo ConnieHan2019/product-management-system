@@ -1,16 +1,6 @@
 version: '3'
 services:  
-  mysql-server:
-    image: mysql:8.0
-    container_name: mysql-server
-    network_mode: "host"
-    ports:
-      - "3306:3306"
-    env_file:
-      - env/docker.env
-    volumes:
-      - mysql-data:/var/lib/mysql
-  product-management-system:
+ product-management-system:
     image: product-management-system
     container_name: product-management-system
     network_mode: "host"  
@@ -22,7 +12,4 @@ services:
       - "8080:8080"
     env_file:
       - env/docker.env
-    depends_on:
-      - mysql-server
-volumes:
-  mysql-data:
+  

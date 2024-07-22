@@ -1,10 +1,22 @@
 version: '3'
-services:  
- product-management-system:
+services:
+  mysql-server:
+    image: mysql:8.0
+    container_name: mysql-server
+    ports:
+      - "3306:3306"
+    env_file:
+      - env/docker.env
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--password=$${DB_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  product-management-system:
     image: product-management-system
     container_name: product-management-system
-    network_mode: "host"  
-    command: ["--config-path", "/app/config.yaml"]
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,4 +24,8 @@ services:
       - "8080:8080"
     env_file:
       - env/docker.env
-  
+    command: ["sleep 360"]
+    depends_on:
+      - mysql-server
+volumes:
+  mysql-data:

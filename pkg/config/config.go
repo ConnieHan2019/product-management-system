@@ -44,7 +44,7 @@ func LoadConfig(configFile string, log logr.Logger) error {
 
 func LoadEnvConfig() {
 	Cfg.Username = os.Getenv("DB_ROOT_USER")
-	Cfg.Password = os.Getenv("DB_ROOT_PASSWPORD")
+	Cfg.Password = os.Getenv("DB_ROOT_PASSWORD")
 	Cfg.Dbname = os.Getenv("DB_NAME")
 	Cfg.Charset = os.Getenv("DB_CHARSET")
 	Cfg.Host = os.Getenv("DB_HOST")

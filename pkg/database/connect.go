@@ -10,12 +10,12 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 
-	"product-management-system/config"
+	"product-management-system/pkg/config"
 )
 
 // InitDatabase ...
 func InitDatabase(log logr.Logger, dbConfig config.DatabaseConfig) *gorm.DB {
-	log.Info("start to init database", "config")
+	log.Info("start to init database")
 	charset := "latin1"
 	validateDatabaseConfig(&dbConfig)
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&loc=%s",
@@ -24,7 +24,7 @@ func InitDatabase(log logr.Logger, dbConfig config.DatabaseConfig) *gorm.DB {
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		panic(err)
 
 	}
 	// 为 `User` 创建表
@@ -39,7 +39,7 @@ func validateDatabaseConfig(cfg *config.DatabaseConfig) {
 		cfg.Username = "root"
 	}
 	if cfg.Password == "" {
-		cfg.Password = "pass"
+		cfg.Password = "default-password"
 	}
 	if cfg.Dbname == "" {
 		cfg.Dbname = "product-management-system-db"

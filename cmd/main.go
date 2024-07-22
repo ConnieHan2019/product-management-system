@@ -22,7 +22,7 @@ func parseFlag() {
 	flag.BoolVar(&h, "h", false, "show usage")
 	flag.StringVar(&appAddr, "app-addr", ":8080", "The address the app endpoint binds to.")
 	flag.StringVar(&logPath, "log-path", "", "The log file path.")
-	flag.StringVar(&configPath, "config-path", "config.yaml", "The config dir of the web-neudim project.")
+	flag.StringVar(&configPath, "config-path", "", "The config dir of the product-management-system project.")
 	flag.Parse()
 
 }
@@ -43,6 +43,7 @@ func main() {
 		logger.Info("config path is empty, load env config")
 		config.LoadEnvConfig()
 	} else {
+		logger.Info("config path is not empty, load config from file", "configPath", configPath)
 		err := config.LoadConfig(configPath, logger)
 		if err != nil {
 			logger.Error(err, "fail to load config", "configPath", configPath)
