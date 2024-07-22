@@ -1,8 +1,7 @@
 package model
 
-
-// Catagory defines the model for catagory
-type Catagory struct {
+// Category is a struct that represents the category entity.
+type Category struct {
 	UUID         string `json:"uuid" gorm:"column:uuid;primaryKey"`
 	CreatedAt    string `json:"createdAt,omitempty" gorm:"column:created_at"`
 	UpdatedAt    string `json:"updatedAt,omitempty" gorm:"column:updated_at"`
@@ -11,6 +10,7 @@ type Catagory struct {
 	Stock        int    `json:"stock" gorm:"column:stock"`
 }
 
-func (c *Catagory) TableName() string {
-	return "catagories"
+// TableName returns the table name
+func (c *Category) TableName() string {
+	return "categories"
 }

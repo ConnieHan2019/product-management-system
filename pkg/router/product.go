@@ -10,6 +10,7 @@ import (
 	"product-management-system/pkg/request"
 )
 
+// getListProductParams extracts the list product options from the request
 func getListProductParams(c *gin.Context) *request.ListProductOptions {
 	productName := c.PostForm("productName")
 	maxPrice := c.GetFloat64("maxPrice")
@@ -36,6 +37,7 @@ func getListProductParams(c *gin.Context) *request.ListProductOptions {
 	}
 }
 
+// CreateProduct creates a product
 func CreateProduct(c *gin.Context) {
 	var product request.Product
 	if err := c.ShouldBindJSON(&product); err != nil {
@@ -70,6 +72,7 @@ func ListProduct(c *gin.Context) {
 
 }
 
+// GetProductByName gets a product by name
 func GetProductByName(c *gin.Context) {
 	productName := c.Query("productName")
 	if productName == "" {
@@ -87,6 +90,7 @@ func GetProductByName(c *gin.Context) {
 
 }
 
+// GetProductByUUID gets a product by uuid
 func GetProductByUUID(c *gin.Context) {
 	uuid := c.Query("uuid")
 	if uuid == "" {
@@ -103,6 +107,7 @@ func GetProductByUUID(c *gin.Context) {
 
 }
 
+// UpdateProduct updates a product
 func UpdateProduct(c *gin.Context) {
 	product := &request.Product{}
 	if err := c.ShouldBindJSON(product); err != nil {
@@ -121,6 +126,7 @@ func UpdateProduct(c *gin.Context) {
 	c.JSON(http.StatusOK, res.UUID)
 }
 
+// DeleteProductById deletes a product by uuid
 func DeleteProductById(c *gin.Context) {
 	uuid := c.Query("uuid")
 	if uuid == "" {

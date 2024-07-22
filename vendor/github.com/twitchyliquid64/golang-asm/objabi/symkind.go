@@ -34,10 +34,9 @@ package objabi
 type SymKind uint8
 
 // Defined SymKind values.
-// These are used to index into cmd/link/internal/sym/AbiSymKinrequestymKind
+// These are used to index into cmd/link/internal/sym/AbiSymKindToSymKind
 //
 // TODO(rsc): Give idiomatic Go names.
-//
 //go:generate stringer -type=SymKind
 const (
 	// An otherwise invalid zero value for the type
@@ -75,6 +74,6 @@ const (
 	SABIALIAS
 	// Coverage instrumentation counter for libfuzzer.
 	SLIBFUZZER_EXTRA_COUNTER
-	// Update cmd/link/internal/sym/AbiSymKinrequestymKind for new SymKind values.
+	// Update cmd/link/internal/sym/AbiSymKindToSymKind for new SymKind values.
 
 )

@@ -615,7 +615,7 @@ type serverConn struct {
 	pushEnabled                 bool
 	sawClientPreface            bool // preface has already been read, used in h2c upgrade
 	sawFirstSettings            bool // got the initial SETTINGS frame after the preface
-	neerequestendSettingsAck    bool
+	needToSendSettingsAck       bool
 	unackedSettings             int    // how many SETTINGS have we sent without ACKs?
 	queuedControlFrames         int    // control frames in the writeSched queue
 	clientMaxStreams            uint32 // SETTINGS_MAX_CONCURRENT_STREAMS from client (our PUSH_PROMISE limit)
@@ -637,7 +637,7 @@ type serverConn struct {
 	needsFrameFlush             bool              // last frame write wasn't a flush
 	inGoAway                    bool              // we've started to or sent GOAWAY
 	inFrameScheduleLoop         bool              // whether we're in the scheduleFrameWrite loop
-	neerequestendGoAway         bool              // we need to schedule a GOAWAY frame write
+	needToSendGoAway            bool              // we need to schedule a GOAWAY frame write
 	goAwayCode                  ErrCode
 	shutdownTimer               timer // nil until used
 	idleTimer                   timer // nil if unused
@@ -1047,7 +1047,7 @@ func (sc *serverConn) serve() {
 		// Start the shutdown timer after sending a GOAWAY. When sending GOAWAY
 		// with no error code (graceful shutdown), don't start the timer until
 		// all open streams have been completed.
-		sentGoAway := sc.inGoAway && !sc.neerequestendGoAway && !sc.writingFrame
+		sentGoAway := sc.inGoAway && !sc.needToSendGoAway && !sc.writingFrame
 		gracefulShutdownComplete := sc.goAwayCode == ErrCodeNo && sc.curOpenStreams() == 0
 		if sentGoAway && sc.shutdownTimer == nil && (sc.goAwayCode != ErrCodeNo || gracefulShutdownComplete) {
 			sc.shutDownIn(goAwayTimeout)
@@ -1383,8 +1383,8 @@ func (sc *serverConn) scheduleFrameWrite() {
 	}
 	sc.inFrameScheduleLoop = true
 	for !sc.writingFrameAsync {
-		if sc.neerequestendGoAway {
-			sc.neerequestendGoAway = false
+		if sc.needToSendGoAway {
+			sc.needToSendGoAway = false
 			sc.startFrameWrite(FrameWriteRequest{
 				write: &writeGoAway{
 					maxStreamID: sc.maxClientStreamID,
@@ -1393,8 +1393,8 @@ func (sc *serverConn) scheduleFrameWrite() {
 			})
 			continue
 		}
-		if sc.neerequestendSettingsAck {
-			sc.neerequestendSettingsAck = false
+		if sc.needToSendSettingsAck {
+			sc.needToSendSettingsAck = false
 			sc.startFrameWrite(FrameWriteRequest{write: writeSettingsAck{}})
 			continue
 		}
@@ -1460,7 +1460,7 @@ func (sc *serverConn) goAway(code ErrCode) {
 		return
 	}
 	sc.inGoAway = true
-	sc.neerequestendGoAway = true
+	sc.needToSendGoAway = true
 	sc.goAwayCode = code
 	sc.scheduleFrameWrite()
 }
@@ -1731,7 +1731,7 @@ func (sc *serverConn) processSettings(f *SettingsFrame) error {
 	}
 	// TODO: judging by RFC 7540, Section 6.5.3 each SETTINGS frame should be
 	// acknowledged individually, even if multiple are received before the ACK.
-	sc.neerequestendSettingsAck = true
+	sc.needToSendSettingsAck = true
 	sc.scheduleFrameWrite()
 	return nil
 }

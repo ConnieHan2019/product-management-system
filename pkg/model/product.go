@@ -21,6 +21,7 @@ type Product struct {
 	ProviderName string `json:"-" gorm:"-"`
 }
 
+// TableName returns the table name
 func (p *Product) TableName() string {
 	return "products"
 }

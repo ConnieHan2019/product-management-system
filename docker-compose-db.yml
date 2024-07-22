@@ -1,0 +1,22 @@
+version: '3'
+services:
+  mysql-server:
+    image: mysql:8.0
+    container_name: mysql-server
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: product-management-system-db
+      TZ: Asia/Shanghai
+    hostname: mysql-server
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--password=$${DB_ROOT_PASSWORD}"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - product-management-system-network
+networks:
+    product-management-system-network:
+        external: true

@@ -1,13 +1,20 @@
 version: '3'
 services:  
  product-management-system:
-    image: product-management-system
+    image: product-management-system:test1-amd64
     container_name: product-management-system-1
     command: ["--config-path", "/app/config.yaml"]
     ports:
       - "8080:8080"
-    env_file:
-      - env/docker.env
-    volumes:
-      - ./config.yaml:/app/config.yaml
+    environment:
+      - DB_ROOT_USER=root
+      - DB_ROOT_PASSWORD=pass
+      - DB_NAME=product-management-system-db
+      - TZ=Asia/Shanghai
+      - DB_HOST=mysql-server
+    networks:
+        - product-management-system-network
+networks:
+    product-management-system-network:
+        external: true
   

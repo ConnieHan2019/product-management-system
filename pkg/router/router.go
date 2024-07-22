@@ -13,6 +13,7 @@ import (
 var routerLogger logr.Logger
 var productService *service.ProductService
 
+// InitRouter initializes the router
 func InitRouter(log logr.Logger, productSvc *service.ProductService) *gin.Engine {
 	routerLogger = log
 	productService = productSvc

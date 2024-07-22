@@ -1,26 +1,40 @@
 version: '3'
 services:
+  product-management-system:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: product-management-system-1
+    command: ["--config-path", "/app/config.yaml"]
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      - DB_ROOT_USER=root
+      - DB_ROOT_PASSWORD=pass
+      - DB_NAME=product-management-system-db
+      - TZ=Asia/Shanghai
+      - DB_HOST=mysql-server
+    networks:
+      - product-management-system-network
   mysql-server:
     image: mysql:8.0
     container_name: mysql-server
+    restart: always
     ports:
-      - "3307:3306"
-    env_file:
-      - env/docker.env
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: pass
+      MYSQL_DATABASE: product-management-system-db
+      TZ: Asia/Shanghai
+    hostname: mysql-server
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--password=$${DB_ROOT_PASSWORD}"]
       interval: 30s
       timeout: 10s
       retries: 3
-  product-management-system:
-    image: product-management-system
-    container_name: product-management-system
-    ports:
-      - "8080:8080"
-    command: ["--config-path", "/app/config.yaml"]
-    env_file:
-      - env/docker.env
-    depends_on:
-      - mysql-server
-    volumes:
-      - ./config.yaml:/app/config.yaml
+    networks:
+      - product-management-system-network
+networks:
+  product-management-system-network:
+    external: true

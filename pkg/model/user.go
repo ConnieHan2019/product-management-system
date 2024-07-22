@@ -12,6 +12,7 @@ type User struct {
 	Role     string `json:"role"`
 }
 
+// TableName returns the table name
 func (u *User) TableName() string {
 	return "users"
 }

@@ -40,9 +40,6 @@ github.com/gabriel-vasile/mimetype
 github.com/gabriel-vasile/mimetype/internal/charset
 github.com/gabriel-vasile/mimetype/internal/json
 github.com/gabriel-vasile/mimetype/internal/magic
-# github.com/gin-contrib/pprof v1.5.0
-## explicit; go 1.18
-github.com/gin-contrib/pprof
 # github.com/gin-contrib/sse v0.1.0
 ## explicit; go 1.12
 github.com/gin-contrib/sse
@@ -87,31 +84,6 @@ github.com/goccy/go-json/internal/runtime
 # github.com/google/uuid v1.6.0
 ## explicit
 github.com/google/uuid
-# github.com/jackc/pgpassfile v1.0.0
-## explicit; go 1.12
-github.com/jackc/pgpassfile
-# github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a
-## explicit; go 1.14
-github.com/jackc/pgservicefile
-# github.com/jackc/pgx/v5 v5.5.5
-## explicit; go 1.19
-github.com/jackc/pgx/v5
-github.com/jackc/pgx/v5/internal/anynil
-github.com/jackc/pgx/v5/internal/iobufpool
-github.com/jackc/pgx/v5/internal/pgio
-github.com/jackc/pgx/v5/internal/sanitize
-github.com/jackc/pgx/v5/internal/stmtcache
-github.com/jackc/pgx/v5/pgconn
-github.com/jackc/pgx/v5/pgconn/internal/bgreader
-github.com/jackc/pgx/v5/pgconn/internal/ctxwatch
-github.com/jackc/pgx/v5/pgproto3
-github.com/jackc/pgx/v5/pgtype
-github.com/jackc/pgx/v5/pgxpool
-github.com/jackc/pgx/v5/stdlib
-# github.com/jackc/puddle/v2 v2.2.1
-## explicit; go 1.19
-github.com/jackc/puddle/v2
-github.com/jackc/puddle/v2/internal/genstack
 # github.com/jinzhu/inflection v1.0.0
 ## explicit
 github.com/jinzhu/inflection
@@ -124,6 +96,8 @@ github.com/json-iterator/go
 # github.com/klauspost/cpuid/v2 v2.2.8
 ## explicit; go 1.15
 github.com/klauspost/cpuid/v2
+# github.com/kr/pretty v0.3.0
+## explicit; go 1.12
 # github.com/leodido/go-urn v1.4.0
 ## explicit; go 1.18
 github.com/leodido/go-urn
@@ -196,7 +170,6 @@ go.uber.org/zap/zapcore
 golang.org/x/arch/x86/x86asm
 # golang.org/x/crypto v0.25.0
 ## explicit; go 1.20
-golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/sha3
 # golang.org/x/net v0.27.0
 ## explicit; go 1.18
@@ -207,9 +180,6 @@ golang.org/x/net/http2
 golang.org/x/net/http2/h2c
 golang.org/x/net/http2/hpack
 golang.org/x/net/idna
-# golang.org/x/sync v0.7.0
-## explicit; go 1.18
-golang.org/x/sync/semaphore
 # golang.org/x/sys v0.22.0
 ## explicit; go 1.18
 golang.org/x/sys/cpu
@@ -222,13 +192,10 @@ golang.org/x/text/internal/language
 golang.org/x/text/internal/language/compact
 golang.org/x/text/internal/tag
 golang.org/x/text/language
-golang.org/x/text/runes
 golang.org/x/text/secure/bidirule
-golang.org/x/text/secure/precis
 golang.org/x/text/transform
 golang.org/x/text/unicode/bidi
 golang.org/x/text/unicode/norm
-golang.org/x/text/width
 # google.golang.org/protobuf v1.34.2
 ## explicit; go 1.20
 google.golang.org/protobuf/encoding/protowire
@@ -244,6 +211,8 @@ google.golang.org/protobuf/proto
 google.golang.org/protobuf/reflect/protoreflect
 google.golang.org/protobuf/reflect/protoregistry
 google.golang.org/protobuf/runtime/protoiface
+# gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c
+## explicit; go 1.11
 # gopkg.in/natefinch/lumberjack.v2 v2.2.1
 ## explicit; go 1.13
 gopkg.in/natefinch/lumberjack.v2
@@ -256,9 +225,6 @@ gopkg.in/yaml.v3
 # gorm.io/driver/mysql v1.5.7
 ## explicit; go 1.14
 gorm.io/driver/mysql
-# gorm.io/driver/postgres v1.5.9
-## explicit; go 1.19
-gorm.io/driver/postgres
 # gorm.io/driver/sqlite v1.5.6
 ## explicit; go 1.20
 gorm.io/driver/sqlite

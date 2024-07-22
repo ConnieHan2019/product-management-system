@@ -132,8 +132,7 @@ func (ps *ProductService) UpdateProduct(productEntity *request.Product) (*model.
 	return product, nil
 }
 
-// DeleteProductByUUID deletes a product by its UUID
-// Truely delete the product from database
+// DeleteProductByUUID deletes a product by its UUID (hard delete)
 func (ps *ProductService) DeleteProductByUUID(uuid string) error {
 	product := &model.Product{}
 	// check if product exists
@@ -171,6 +170,7 @@ func (ps *ProductService) convertProductToDTO(product *model.Product) *request.P
 	}
 }
 
+// convertProductToModel converts a product DTO to a product model
 func (ps *ProductService) convertProductToModel(product *request.Product) *model.Product {
 	if product == nil {
 		return nil
